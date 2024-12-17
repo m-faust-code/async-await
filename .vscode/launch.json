@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:async-await}/swift-async-await",
+            "name": "Debug swift-async-await (swift-async-await)",
+            "program": "${workspaceFolder:async-await}/swift-async-await/.build/debug/swift-async-await",
+            "preLaunchTask": "swift: Build Debug swift-async-await (swift-async-await)"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:async-await}/swift-async-await",
+            "name": "Release swift-async-await (swift-async-await)",
+            "program": "${workspaceFolder:async-await}/swift-async-await/.build/release/swift-async-await",
+            "preLaunchTask": "swift: Build Release swift-async-await (swift-async-await)"
+        }
+    ]
+}
