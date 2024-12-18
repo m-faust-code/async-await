@@ -10,7 +10,6 @@ func asyncs() async {
 }
 
 
-
 await asyncs()
 
 
