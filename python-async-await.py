@@ -31,5 +31,40 @@ async def timeouts():
     except TimeoutError:
         print("The function timed out")
 
+class Duck():
+    def __init__(self, name):
+        self.name = name
+    
+    async def quack(self):
+        print(self.name + " quacks")
 
-asyncio.run(timeouts())
+    async def quackAt(self, duck):
+        other_name = duck.name
+        print(self.name + " quacks at " + other_name)
+
+    async def rename(self, new_name):
+        print (self.name + " is now " + new_name)
+        self.name = new_name
+
+async def actors():
+    alice = Duck("Alice")
+    bob = Duck("Bob")
+
+    task1 = asyncio.create_task(alice.quack())
+    task2 = asyncio.create_task(bob.quack())
+    task3 = asyncio.create_task(alice.quackAt(bob))
+    task4 = asyncio.create_task(bob.quackAt(alice))
+    task5 = asyncio.create_task(alice.rename("Alice 2"))
+    task6 = asyncio.create_task(bob.rename("Bob 2"))
+
+    await asyncio.gather(
+        task1,
+        task2,
+        task3,
+        task4,
+        task5,
+        task6
+    )
+
+
+asyncio.run(actors())

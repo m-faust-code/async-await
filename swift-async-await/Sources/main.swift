@@ -48,6 +48,7 @@ actor Duck {
     }
 
     func rename(to new_name: String) {
+        print(name + " is now " + new_name)
         self.name = new_name
     }
 }
