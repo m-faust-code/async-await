@@ -24,4 +24,12 @@ async def tasks():
     
     print(f"finished at {time.strftime('%X')}")
 
-asyncio.run(tasks())
+async def timeouts():
+    try:
+        async with asyncio.timeout(3):
+            await(say_after(20, "hello"))
+    except TimeoutError:
+        print("The function timed out")
+
+
+asyncio.run(timeouts())
