@@ -49,9 +49,11 @@ func say(s string) {
 
 func main() {                   // prints hello world 5 times
 	go say("world")		// theoretically both the main thread and the goroutine wake up at about the same time
-	say("hello")		// so the scheduler randomly picks either "hello\nworld\n" or "world\nhello\n"
+	say("hello")		// so the scheduler randomly results in either "hello\nworld\n" or "world\nhello\n"
 }
 ```
+
+(All examples taken from [a tour of go](https://go.dev/tour/concurrency/1). You can run and edit the code there if you'd like to see the output)
 
 Notice how the same exact function is called with and without the go keyword.
 
