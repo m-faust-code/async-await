@@ -1,3 +1,14 @@
+> _Paul commentary:_
+>
+> Below are investigations of how Python, Swift, and Go handle functions that _execute concurrently_ (i.e. multiple function calls can overlap in time) without allowing the kind of unchecked parallelism of languages like C and Java that causes data races. A _data race_ occurs when separate threads read and write data in the same stretch of memory at the same time, potentially stepping on each other’s toes and causing data corruption.
+>
+> Languages like Java and C provide threads as their basic building block of concurrent code — a fully parallel “lots of code can run at once!” model — and then ask programmers to carefully keep track of which pieces of code might use the same data and protect that data with _locks_. A lock is a way of saying, “here is a point where one thread has to wait for another.” This approach is highly flexible, but it asks a lot of the programmer. It is brittle and error-prone.
+>
+> Python, Swift, and Go all offer alternatives that do _not_ use threads as the basic building block. Instead, they use various forms of [coroutines](https://en.wikipedia.org/wiki/Coroutine): functions that can pause, wait for something else to provide data, then resume at an arbitrary later time ([further reading](https://www.cs.tufts.edu/~nr/cs257/archive/roberto-ierusalimschy/revisiting-coroutines.pdf)). In this model, programmers don’t have to think about threads and locks; instead, they have to think about where code can suspend, and where data is sent from one concurrent function to another. It is an old idea dating back to the 1960s that have experienced renewed interest in the past decade or so.
+>
+> That is the context for the student investigations below.
+
+
 # async/await in python and swift
 
 - [**Python example code**](python-async-await.py)
@@ -14,7 +25,7 @@
 ## tour of functions in example code
 
 ### asyncs
-This function demonstrates basic async/await functionality. Notice that sleep throws as error in Swift but not in Python. For some reason the sleep function in Swift waits for a significantly longer time in Swift than I inputted, at least on my computer.
+This function demonstrates basic async/await functionality. Notice that sleep throws as error in Swift but not in Python. For some reason the sleep function in Swift waits for a significantly longer time in Swift than I inputted, at least on my computer. _(Paul: I do not see this difference on my machine. /shrug)_
 
 ### say_after
 Helper function. Prints a string after a set time
@@ -28,6 +39,8 @@ In python you can run a task with timeout which would cause the task to exit wit
 ### actors
 In Swift actors are types like classes and structs. They are reference types like classes. Actors are like classes that are safer to use with concurrently running code. Unlike classes, only one task is allowed to access an actor's mutable state. When a task other than the one the actor is in tries to reference its mutable state, it has to call it using await. If the actors is busy in the middle of resolving a method or returning a variable to another task, it has to wait. This prevents data races and other problems caused by multiple tasks trying access the same object.
 
+> _Paul aside_: What “busy” means here “any method of the actor is running but not awaiting.” When an actor method starts running, all other method calls queue up to wait their turn. As soon as that method hits an `await`, however, other method calls can jump in and have a turn; now is the the awaiting method that has to wait its turn.
+
 In Swift I created a Duck actor to demonstrate. If you run the function you can see that the tasks can run in any order without causing problems. Python doesn't have actors, but I recreated the function using a class. The class doesn't have the same concurrency safety features that actors do, but the program is simple enough that it still runs without error. The python code always runs the tasks in the same order, so it is possible it is not actually running the tasks asynchronously. 
 
 # goroutines and channels in go
@@ -35,6 +48,8 @@ In Swift I created a Duck actor to demonstrate. If you run the function you can 
 ## goroutines and async
 
 Goroutines are lightweight threads that allow for code to be run asynchronously.
+
+> _Paul aside_: If you think this just sounds like a corny pun on “coroutine,” you are correct!
 
 To make a goroutine, you can use the go keyword before calling the function.
 
